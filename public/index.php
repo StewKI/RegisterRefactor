@@ -2,4 +2,12 @@
 
 declare(strict_types=1);
 
-echo "caoooo";
+/** @var App $app */
+
+use app\App;
+
+$app = require __DIR__ . '/../bootstrap.php';
+
+$app->boot();
+
+$app->run();
