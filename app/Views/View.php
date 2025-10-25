@@ -3,13 +3,15 @@
 declare(strict_types=1);
 
 
-namespace App;
+namespace app\Views;
 
-class View
+use App\Contracts\ViewInterface;
+
+class View implements ViewInterface
 {
     private string $content;
 
-    private function __construct(string $content)
+    protected function __construct(string $content)
     {
         $this->content = $content;
     }
@@ -19,8 +21,8 @@ class View
         return new View($content);
     }
 
-    public function redner(): void
+    public function render(): string
     {
-        echo $this->content;
+        return $this->content;
     }
 }

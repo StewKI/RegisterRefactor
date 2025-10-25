@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Contracts\ViewInterface;
 use App\Exceptions\RouteNotFoundException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -41,13 +42,15 @@ class Router
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function resolve(string $requestUri, string $requestMethod): View
+    public function resolve(string $requestUri, string $requestMethod): ViewInterface
     {
         $route = $this->getRoute($requestUri);
         $action = $this->getValidAction($requestMethod, $route);
 
+        $request = $this->container->get(Request::class);
+
         if (is_callable($action)) {
-            return call_user_func($action);
+            return call_user_func($action, [$request]);
         }
 
         [$class, $method] = $action;
@@ -56,7 +59,7 @@ class Router
             $class = $this->container->get($class);
 
             if (method_exists($class, $method)) {
-                return call_user_func_array([$class, $method], []);
+                return call_user_func_array([$class, $method], [$request]);
             }
         }
 
