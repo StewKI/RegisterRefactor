@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-namespace app\Views;
+namespace App\Views;
 
 use JsonException;
 
@@ -24,5 +24,11 @@ class JsonView extends View
     public static function make(array $data): static
     {
         return new static($data);
+    }
+
+    public function render(): string
+    {
+        header('Content-type: application/json');
+        return parent::render();
     }
 }

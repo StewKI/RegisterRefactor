@@ -8,7 +8,6 @@ namespace App\Controllers;
 use App\Contracts\ViewInterface;
 use App\Request;
 use App\Views\Redirect;
-use app\Views\View;
 
 class HomeController
 {

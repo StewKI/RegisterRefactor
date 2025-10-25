@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-namespace app\Views;
+namespace App\Views;
 
 use App\Contracts\ViewInterface;
 

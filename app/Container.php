@@ -29,7 +29,6 @@ class Container implements ContainerInterface
         if ($this->has($id))
         {
             $entry = $this->entries[$id];
-
             if (is_callable($entry)) {
                 return $entry($this);
             }
@@ -48,6 +47,16 @@ class Container implements ContainerInterface
     public function set(string $id, callable|string $concrete): void
     {
         $this->entries[$id] = $concrete;
+    }
+
+    /**
+     * @param (callable|string)[] $entries
+     */
+    public function setMultiple(array $entries): void
+    {
+        foreach ($entries as $id => $concrete) {
+            $this->set($id, $concrete);
+        }
     }
 
     /**

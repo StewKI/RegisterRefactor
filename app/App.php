@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Exceptions\RouteNotFoundException;
-use app\Views\View;
+use App\Views\View;
 
 class App
 {
