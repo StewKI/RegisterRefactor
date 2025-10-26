@@ -27,12 +27,17 @@ class RegisterController
 
     public function register(Request $request): ViewInterface
     {
-        try {
+        try
+        {
             $user = $this->registerService->registerUser($request->body());
+
             $response = RegisterResultResponse::successRegister($user->getId());
         }
-        catch (ValidationException $validationException) {
-            $response = RegisterResultResponse::failure($validationException->error);
+        catch (ValidationException $validationException)
+        {
+            $response = RegisterResultResponse::failure(
+                $validationException->error,
+            );
         }
 
         return JsonView::make($response->getPayload());
