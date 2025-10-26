@@ -11,7 +11,7 @@ use App\Exceptions\ValidationException;
 use App\Request;
 use App\Responses\RegisterResultResponse;
 use App\Views\JsonView;
-use App\Views\View;
+use App\Views\PhpTemplate;
 
 class RegisterController
 {
@@ -22,7 +22,7 @@ class RegisterController
 
     public function index(): ViewInterface
     {
-        return View::raw("Register page");
+        return PhpTemplate::load("register");
     }
 
     public function register(Request $request): ViewInterface
