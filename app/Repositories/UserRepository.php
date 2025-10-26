@@ -47,4 +47,22 @@ class UserRepository implements UserRepositoryInterface
 
         return count($rows) > 0;
     }
+
+    public function getUserById(int $userId): User
+    {
+        $select = $this->queryBuilderFactory->createSelectQuery("user", ["id", "email", "password"]);
+
+        $select->where("id", Param::bind($userId));
+
+        $selectQuery = $select->build();
+        $selectQuery->execute();
+
+        $row = $selectQuery->fetchOne();
+
+        return new User(
+            $row["id"],
+            $row["email"],
+            $row["password"]
+        );
+    }
 }
