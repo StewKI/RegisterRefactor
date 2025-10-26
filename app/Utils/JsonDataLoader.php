@@ -20,30 +20,29 @@ class JsonDataLoader implements DataLoaderInterface
      */
     public function getData(string $name): array
     {
-        return $this->getValidDecoded($name);
+        $path = $this->getValidPath($name);
+        $content = $this->getValidContent($path);
+
+        return $this->getValidDecoded($content, $path);
     }
 
     /**
      * @throws JsonException
      */
-    public function getValidDecoded(string $name): mixed
+    public function getValidDecoded(string $content, string $path): mixed
     {
-        $content = $this->getValidContent($name);
-
         $decoded = json_decode(
             $content,
             associative: true,
             flags: JSON_THROW_ON_ERROR
         );
-        $this->checkDecoded($decoded);
+        $this->checkDecoded($decoded, $path);
 
         return $decoded;
     }
 
-    public function getValidContent(string $name): string|false
+    public function getValidContent(string $path): string|false
     {
-        $path = $this->getValidPath($name);
-
         $content = file_get_contents($path);
         $this->checkContent($content, $path);
 
@@ -63,7 +62,7 @@ class JsonDataLoader implements DataLoaderInterface
         return $this->rootDir . DIRECTORY_SEPARATOR . $name . '.json';
     }
 
-    private function checkDecoded(mixed $decoded): void
+    private function checkDecoded(mixed $decoded, string $path): void
     {
         if (!is_array($decoded)) {
             throw new RuntimeException("Invalid JSON structure in {$path}");
