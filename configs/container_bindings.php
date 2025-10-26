@@ -8,21 +8,25 @@ use App\Container;
 use App\Contracts\AuthProviderInterface;
 use App\Contracts\DataLoaderInterface;
 use App\Contracts\Providers\MailAddressProviderInterface;
+use App\Contracts\Providers\MailContentProviderInterface;
 use App\Contracts\Query\QueryBuilderFactoryInterface;
 use App\Contracts\Repositories\MailRepositoryInterface;
 use App\Contracts\Repositories\UserLogRepositoryInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Contracts\Services\Mail\MailSenderServiceInterface;
+use App\Contracts\Services\Mail\MailTemplateServiceInterface;
 use App\Contracts\Services\Mail\QueueMailServiceInterface;
 use App\Contracts\Services\Mail\SendQueuedMailsServiceInterface;
 use App\Contracts\Services\RegisterServiceInterface;
 use App\Contracts\SessionInterface;
 use App\Providers\MailAddressProvider;
+use App\Providers\MailContentProvider;
 use App\Query\Mysqli\MysqliQueryBuilderFactory;
 use App\Repositories\MailRepository;
 use App\Repositories\UserLogRepository;
 use App\Repositories\UserRepository;
 use App\Services\AuthProvider;
+use App\Services\Mail\MailTemplateService;
 use App\Services\Mail\PhpMailerMailSenderService;
 use App\Services\Mail\QueueMailService;
 use App\Services\Mail\SendQueuedMailsService;
@@ -52,6 +56,8 @@ $bindings = [
         return new JsonDataLoader(RESOURCES_DIR . "/data");
     },
     MailAddressProviderInterface::class => MailAddressProvider::class,
+    MailContentProviderInterface::class => MailContentProvider::class,
+    MailTemplateServiceInterface::class => MailTemplateService::class,
 ];
 
 return function (Container $container): void
