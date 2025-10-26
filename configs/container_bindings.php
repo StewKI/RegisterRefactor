@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\App;
 use App\Config;
 use App\Container;
+use App\Contracts\AuthProviderInterface;
 use App\Contracts\Query\QueryBuilderFactoryInterface;
 use App\Contracts\Repositories\MailRepositoryInterface;
 use App\Contracts\Repositories\UserLogRepositoryInterface;
@@ -13,14 +14,17 @@ use App\Contracts\Services\Mail\MailSenderServiceInterface;
 use App\Contracts\Services\Mail\QueueMailServiceInterface;
 use App\Contracts\Services\Mail\SendQueuedMailsServiceInterface;
 use App\Contracts\Services\RegisterServiceInterface;
+use App\Contracts\SessionInterface;
 use App\Query\Mysqli\MysqliQueryBuilderFactory;
 use App\Repositories\MailRepository;
 use App\Repositories\UserLogRepository;
 use App\Repositories\UserRepository;
+use App\Services\AuthProvider;
 use App\Services\Mail\PhpMailerMailSenderService;
 use App\Services\Mail\QueueMailService;
 use App\Services\Mail\SendQueuedMailsService;
 use App\Services\RegisterService;
+use App\Session;
 use Psr\Container\ContainerInterface;
 
 $bindings = [
@@ -28,6 +32,8 @@ $bindings = [
     QueryBuilderFactoryInterface::class => function (ContainerInterface $container) {
         return $container->get(MysqliQueryBuilderFactory::class);
     },
+    SessionInterface::class => Session::class,
+    AuthProviderInterface::class => AuthProvider::class,
     UserRepositoryInterface::class => UserRepository::class,
     UserLogRepositoryInterface::class => UserLogRepository::class,
     RegisterServiceInterface::class => RegisterService::class,
