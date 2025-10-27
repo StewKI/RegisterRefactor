@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 
-namespace App\Validation\Validators;
+namespace App\Validation\Rules;
 
-use App\Contracts\Validation\ValidatorInterface;
+use App\Contracts\Validation\RuleInterface;
 use App\Exceptions\ValidationException;
 
-class EqualsValidator implements ValidatorInterface
+class EqualsRule implements RuleInterface
 {
     public function __construct(
         private readonly string $field1,

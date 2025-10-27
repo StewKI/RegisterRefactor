@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 
-namespace App\Validation\Validators;
+namespace App\Validation\Rules;
 
-use App\Contracts\Validation\ValidatorInterface;
+use App\Contracts\Validation\RuleInterface;
 use App\Exceptions\ValidationException;
 
-class PasswordValidator implements ValidatorInterface
+class PasswordRule implements RuleInterface
 {
     /**
      * @param string[] $passwordFields

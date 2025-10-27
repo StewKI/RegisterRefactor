@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 
-namespace App\Validation\Validators;
+namespace App\Validation\Rules;
 
 use App\Contracts\Repositories\UserRepositoryInterface;
-use App\Contracts\Validation\ValidatorInterface;
+use App\Contracts\Validation\RuleInterface;
 use App\Exceptions\ValidationException;
 
-class EmailNotTakenValidator implements ValidatorInterface
+class EmailNotTakenRule implements RuleInterface
 {
     public function __construct(
         private readonly string $emailField,

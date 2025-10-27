@@ -11,14 +11,8 @@ use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Contracts\Services\Mail\MailTemplateServiceInterface;
 use App\Contracts\Services\Mail\QueueMailServiceInterface;
 use App\Contracts\Services\RegisterServiceInterface;
-use App\Contracts\Validation\ValidatorInterface;
+use App\Contracts\Validation\Validators\UserRegistrationValidatorInterface;
 use App\Models\User;
-use App\Validation\ValidationHelper;
-use App\Validation\Validators\EmailFormatValidator;
-use App\Validation\Validators\EmailNotTakenValidator;
-use App\Validation\Validators\EqualsValidator;
-use App\Validation\Validators\PasswordValidator;
-use App\Validation\Validators\RequiredValidator;
 
 class RegisterService implements RegisterServiceInterface
 {
@@ -28,11 +22,12 @@ class RegisterService implements RegisterServiceInterface
         private readonly UserLogRepositoryInterface $logRepository,
         private readonly AuthProviderInterface $authProvider,
         private readonly MailTemplateServiceInterface $mailTemplateService,
+        private readonly UserRegistrationValidatorInterface $validator,
     ) {}
 
     public function registerUser(array $data): User
     {
-        $this->validate($data);
+        $this->validator->validate($data);
 
         $user = $this->createUser($data);
 
@@ -58,24 +53,6 @@ class RegisterService implements RegisterServiceInterface
         );
     }
 
-    public function validate(array $data): void
-    {
-        ValidationHelper::validateAll($this->getValidators(), $data);
-    }
-
-    /**
-     * @return ValidatorInterface[]
-     */
-    private function getValidators(): array
-    {
-        return [
-            new RequiredValidator(["email", "password", "password2"]),
-            new PasswordValidator(["password", "password2"]),
-            new EmailFormatValidator('email'),
-            new EqualsValidator("password", "password2", mismatchName: "password"),
-            new EmailNotTakenValidator("email", $this->userRepository),
-        ];
-    }
 
     public function logRegistered(User $user): void
     {

@@ -19,6 +19,7 @@ use App\Contracts\Services\Mail\QueueMailServiceInterface;
 use App\Contracts\Services\Mail\SendQueuedMailsServiceInterface;
 use App\Contracts\Services\RegisterServiceInterface;
 use App\Contracts\SessionInterface;
+use App\Contracts\Validation\Validators\UserRegistrationValidatorInterface;
 use App\Providers\MailAddressProvider;
 use App\Providers\MailContentProvider;
 use App\Query\Mysqli\MysqliQueryBuilderFactory;
@@ -33,6 +34,7 @@ use App\Services\Mail\SendQueuedMailsService;
 use App\Services\RegisterService;
 use App\Session;
 use App\Utils\JsonDataLoader;
+use App\Validation\Validators\UserRegistrationValidator;
 use Psr\Container\ContainerInterface;
 
 $bindings = [
@@ -58,6 +60,7 @@ $bindings = [
     MailAddressProviderInterface::class => MailAddressProvider::class,
     MailContentProviderInterface::class => MailContentProvider::class,
     MailTemplateServiceInterface::class => MailTemplateService::class,
+    UserRegistrationValidatorInterface::class => UserRegistrationValidator::class,
 ];
 
 return function (Container $container): void

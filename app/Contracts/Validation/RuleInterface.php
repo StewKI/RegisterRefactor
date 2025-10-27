@@ -7,7 +7,7 @@ namespace App\Contracts\Validation;
 
 use App\Exceptions\ValidationException;
 
-interface ValidatorInterface
+interface RuleInterface
 {
     /**
      * @throws ValidationException
