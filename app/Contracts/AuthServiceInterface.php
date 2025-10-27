@@ -7,7 +7,7 @@ namespace App\Contracts;
 
 use App\Models\User;
 
-interface AuthProviderInterface
+interface AuthServiceInterface
 {
     public function setUser(User $user): void;
 

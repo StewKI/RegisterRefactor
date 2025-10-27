@@ -5,12 +5,12 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Contracts\AuthProviderInterface;
+use App\Contracts\AuthServiceInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Contracts\SessionInterface;
 use App\Models\User;
 
-class AuthProvider implements AuthProviderInterface
+class AuthService implements AuthServiceInterface
 {
     private const USER_KEY = 'userId';
 

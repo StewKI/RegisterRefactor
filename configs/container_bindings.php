@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\App;
 use App\Config;
 use App\Container;
-use App\Contracts\AuthProviderInterface;
+use App\Contracts\AuthServiceInterface;
 use App\Contracts\DataLoaderInterface;
 use App\Contracts\Providers\IpProviderInterface;
 use App\Contracts\Providers\MailAddressProviderInterface;
@@ -31,7 +31,7 @@ use App\Query\Mysqli\MysqliQueryBuilderFactory;
 use App\Repositories\MailRepository;
 use App\Repositories\UserLogRepository;
 use App\Repositories\UserRepository;
-use App\Services\AuthProvider;
+use App\Services\AuthService;
 use App\Services\Mail\MailTemplateService;
 use App\Services\Mail\PhpMailerMailSenderService;
 use App\Services\Mail\QueueMailService;
@@ -46,22 +46,22 @@ use App\Validation\Validators\UserRegistrationValidator;
 use Psr\Container\ContainerInterface;
 
 $bindings = [
-    mysqli::class => fn () => App::getDb()->getMysqli(),
-    QueryBuilderFactoryInterface::class => function (ContainerInterface $container) {
+    mysqli::class                          => fn () => App::getDb()->getMysqli(),
+    QueryBuilderFactoryInterface::class    => function (ContainerInterface $container) {
         return $container->get(MysqliQueryBuilderFactory::class);
     },
-    SessionInterface::class => Session::class,
-    AuthProviderInterface::class => AuthProvider::class,
-    UserRepositoryInterface::class => UserRepository::class,
-    UserLogRepositoryInterface::class => UserLogRepository::class,
-    RegisterServiceInterface::class => RegisterService::class,
-    MailSenderServiceInterface::class => function (ContainerInterface $container) {
+    SessionInterface::class                => Session::class,
+    AuthServiceInterface::class            => AuthService::class,
+    UserRepositoryInterface::class         => UserRepository::class,
+    UserLogRepositoryInterface::class      => UserLogRepository::class,
+    RegisterServiceInterface::class        => RegisterService::class,
+    MailSenderServiceInterface::class      => function (ContainerInterface $container) {
         $config = $container->get(Config::class);
         return new PhpMailerMailSenderService($config->mail);
     },
-    QueueMailServiceInterface::class => QueueMailService::class,
+    QueueMailServiceInterface::class       => QueueMailService::class,
     SendQueuedMailsServiceInterface::class => SendQueuedMailsService::class,
-    MailRepositoryInterface::class => MailRepository::class,
+    MailRepositoryInterface::class         => MailRepository::class,
     DataLoaderInterface::class => function(ContainerInterface $container) {
         return new JsonDataLoader(RESOURCES_DIR . "/data");
     },

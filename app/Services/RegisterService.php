@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Contracts\AuthProviderInterface;
+use App\Contracts\AuthServiceInterface;
 use App\Contracts\Repositories\UserLogRepositoryInterface;
 use App\Contracts\Services\Mail\MailTemplateServiceInterface;
 use App\Contracts\Services\Mail\QueueMailServiceInterface;
@@ -22,7 +22,7 @@ class RegisterService implements RegisterServiceInterface
         private readonly MailTemplateServiceInterface $mailTemplateService,
         private readonly QueueMailServiceInterface $queueMailService,
         private readonly UserLogRepositoryInterface $logRepository,
-        private readonly AuthProviderInterface $authProvider,
+        private readonly AuthServiceInterface $authProvider,
     ) {}
 
     public function registerUser(array $data): User
