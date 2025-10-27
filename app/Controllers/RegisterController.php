@@ -9,7 +9,7 @@ use App\Contracts\Services\RegisterServiceInterface;
 use App\Contracts\ViewInterface;
 use App\Exceptions\ValidationException;
 use App\Request;
-use App\Responses\RegisterResultResponse;
+use App\Responses\RegisterResponse;
 use App\Views\JsonView;
 use App\Views\PhpTemplate;
 
@@ -31,13 +31,13 @@ class RegisterController
         {
             $user = $this->registerService->registerUser($request->body());
 
-            $response = RegisterResultResponse::successRegister($user->getId());
+            $response = RegisterResponse::successUser($user->getId());
         }
         catch (ValidationException $validationException)
         {
-            $response = RegisterResultResponse::failure(
-                $validationException->error,
-            );
+            $error = $validationException->error;
+
+            $response = RegisterResponse::failure($error);
         }
 
         return JsonView::make($response->getPayload());
