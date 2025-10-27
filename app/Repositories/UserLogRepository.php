@@ -19,7 +19,8 @@ class UserLogRepository implements UserLogRepositoryInterface
 
     public function createUserLog(string $action, int $userId): UserLog
     {
-        $insert = $this->queryBuilderFactory->createInsertQuery(
+        $insert = $this->queryBuilderFactory
+            ->createInsertQuery(
             "user_log",
             ["action", "user_id", "log_time"],
         );
@@ -28,8 +29,7 @@ class UserLogRepository implements UserLogRepositoryInterface
             [Param::bind($action), Param::bind($userId), Param::raw("NOW()")],
         );
 
-        $insertQuery = $insert->build();
-        $insertQuery->execute();
+        $insertQuery = $insert->build()->execute();
 
         return new UserLog(
             $insertQuery->lastInsertId(),

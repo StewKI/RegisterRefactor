@@ -7,7 +7,7 @@ namespace App\Contracts\Query;
 
 interface QueryInterface
 {
-    public function execute();
+    public function execute(): QueryInterface;
     public function lastInsertId(): int;
     public function fetchOne(): mixed;
     public function fetchAll(): array;

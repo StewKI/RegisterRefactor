@@ -20,12 +20,12 @@ class UserRepository implements UserRepositoryInterface
         string $password
     ): User
     {
-        $insert = $this->queryBuilderFactory->createInsertQuery("user", ["email", "password"]);
+        $insert = $this->queryBuilderFactory
+            ->createInsertQuery("user", ["email", "password"]);
 
         $insert->values(Param::bindList([$email, $password]));
 
-        $insertQuery = $insert->build();
-        $insertQuery->execute();
+        $insertQuery = $insert->build()->execute();
 
         return new User(
             $insertQuery->lastInsertId(),
@@ -36,13 +36,12 @@ class UserRepository implements UserRepositoryInterface
 
     public function emailExists(string $email): bool
     {
-        $select = $this->queryBuilderFactory->createSelectQuery("user", ["email"]);
+        $select = $this->queryBuilderFactory
+            ->createSelectQuery("user", ["email"]);
 
         $select->where("email", Param::bind($email));
 
-        $selectQuery = $select->build();
-        $selectQuery->execute();
-
+        $selectQuery = $select->build()->execute();
         $rows = $selectQuery->fetchAll();
 
         return count($rows) > 0;
@@ -50,13 +49,12 @@ class UserRepository implements UserRepositoryInterface
 
     public function getUserById(int $userId): User
     {
-        $select = $this->queryBuilderFactory->createSelectQuery("user", ["id", "email", "password"]);
+        $select = $this->queryBuilderFactory
+            ->createSelectQuery("user", ["id", "email", "password"]);
 
         $select->where("id", Param::bind($userId));
 
-        $selectQuery = $select->build();
-        $selectQuery->execute();
-
+        $selectQuery = $select->build()->execute();
         $row = $selectQuery->fetchOne();
 
         return new User(

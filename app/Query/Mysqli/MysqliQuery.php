@@ -17,11 +17,13 @@ class MysqliQuery implements QueryInterface
     )
     {}
 
-    public function execute(): void
+    public function execute(): self
     {
         if (!$this->stmt->execute()) {
             throw new RuntimeException('Statement execution failed: ' . $this->stmt->error);
         }
+
+        return $this;
     }
 
     public function lastInsertId(): int

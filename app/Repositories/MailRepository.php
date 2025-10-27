@@ -20,7 +20,8 @@ class MailRepository implements MailRepositoryInterface
 
     public function createMail(MailData $mailData, MailStatus $mailStatus): Mail
     {
-        $insert = $this->queryBuilderFactory->createInsertQuery(
+        $insert = $this->queryBuilderFactory
+            ->createInsertQuery(
             "mail",
             ["to", "from", "from_name", "subject", "body", "status"],
         );
@@ -34,8 +35,7 @@ class MailRepository implements MailRepositoryInterface
             $mailStatus->value
         ]));
 
-        $query = $insert->build();
-        $query->execute();
+        $query = $insert->build()->execute();
 
         return new Mail(
             $query->lastInsertId(),
@@ -53,13 +53,12 @@ class MailRepository implements MailRepositoryInterface
      */
     public function getMailsByStatus(MailStatus $mailStatus): array
     {
-        $select = $this->queryBuilderFactory->createSelectQuery("mail", ["*"]);
+        $select = $this->queryBuilderFactory
+            ->createSelectQuery("mail", ["*"]);
 
         $select->where("status", Param::bind($mailStatus->value));
 
-        $query = $select->build();
-        $query->execute();
-
+        $query = $select->build()->execute();
         $mails = $query->fetchAll();
 
         $mails = array_map(function ($mail) {
@@ -79,14 +78,14 @@ class MailRepository implements MailRepositoryInterface
 
     public function updateMailStatus(Mail $mail, MailStatus $newStatus): Mail
     {
-        $update = $this->queryBuilderFactory->createUpdateQuery("mail");
+        $update = $this->queryBuilderFactory
+            ->createUpdateQuery("mail");
 
         $update
             ->set("status", Param::bind($newStatus->value))
             ->where("id", Param::bind($mail->getId()));
 
-        $query = $update->build();
-        $query->execute();
+        $query = $update->build()->execute();
 
         return $mail->setStatus($newStatus);
     }
