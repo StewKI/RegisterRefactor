@@ -7,12 +7,14 @@ use App\Config;
 use App\Container;
 use App\Contracts\AuthProviderInterface;
 use App\Contracts\DataLoaderInterface;
+use App\Contracts\Providers\IpProviderInterface;
 use App\Contracts\Providers\MailAddressProviderInterface;
 use App\Contracts\Providers\MailContentProviderInterface;
 use App\Contracts\Query\QueryBuilderFactoryInterface;
 use App\Contracts\Repositories\MailRepositoryInterface;
 use App\Contracts\Repositories\UserLogRepositoryInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
+use App\Contracts\Services\FraudDetectionServiceInterface;
 use App\Contracts\Services\Mail\MailSenderServiceInterface;
 use App\Contracts\Services\Mail\MailTemplateServiceInterface;
 use App\Contracts\Services\Mail\QueueMailServiceInterface;
@@ -20,6 +22,7 @@ use App\Contracts\Services\Mail\SendQueuedMailsServiceInterface;
 use App\Contracts\Services\RegisterServiceInterface;
 use App\Contracts\SessionInterface;
 use App\Contracts\Validation\Validators\UserRegistrationValidatorInterface;
+use App\Providers\IpProvider;
 use App\Providers\MailAddressProvider;
 use App\Providers\MailContentProvider;
 use App\Query\Mysqli\MysqliQueryBuilderFactory;
@@ -32,6 +35,7 @@ use App\Services\Mail\PhpMailerMailSenderService;
 use App\Services\Mail\QueueMailService;
 use App\Services\Mail\SendQueuedMailsService;
 use App\Services\RegisterService;
+use App\Services\ThirdParty\MaxMindFraudDetectionServiceMock;
 use App\Session;
 use App\Utils\JsonDataLoader;
 use App\Validation\Validators\UserRegistrationValidator;
@@ -61,6 +65,8 @@ $bindings = [
     MailContentProviderInterface::class => MailContentProvider::class,
     MailTemplateServiceInterface::class => MailTemplateService::class,
     UserRegistrationValidatorInterface::class => UserRegistrationValidator::class,
+    FraudDetectionServiceInterface::class => MaxMindFraudDetectionServiceMock::class,
+    IpProviderInterface::class => IpProvider::class,
 ];
 
 return function (Container $container): void

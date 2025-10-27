@@ -5,12 +5,16 @@ declare(strict_types=1);
 
 namespace App\Validation\Validators;
 
+use App\Contracts\Providers\IpProviderInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
+use App\Contracts\Services\FraudDetectionServiceInterface;
 use App\Contracts\Validation\RuleInterface;
 use App\Contracts\Validation\Validators\UserRegistrationValidatorInterface;
 use App\Validation\Rules\EmailFormatRule;
+use App\Validation\Rules\EmailFraudDetectionRule;
 use App\Validation\Rules\EmailNotTakenRule;
 use App\Validation\Rules\EqualsRule;
+use App\Validation\Rules\IpFraudDetectionRule;
 use App\Validation\Rules\PasswordRule;
 use App\Validation\Rules\RequiredRule;
 
@@ -18,6 +22,8 @@ class UserRegistrationValidator implements UserRegistrationValidatorInterface
 {
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
+        private readonly FraudDetectionServiceInterface $fraudDetectionService,
+        private readonly IpProviderInterface $ipProvider,
     ) {}
 
     public function validate(array $data): void
@@ -48,6 +54,8 @@ class UserRegistrationValidator implements UserRegistrationValidatorInterface
             new EmailFormatRule('email'),
             new EqualsRule("password", "password2", mismatchName: "password"),
             new EmailNotTakenRule("email", $this->userRepository),
+            new EmailFraudDetectionRule("email", $this->fraudDetectionService),
+            new IpFraudDetectionRule($this->ipProvider, $this->fraudDetectionService),
         ];
     }
 }
