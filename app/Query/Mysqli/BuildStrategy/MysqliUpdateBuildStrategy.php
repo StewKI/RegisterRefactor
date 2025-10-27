@@ -55,6 +55,7 @@ class MysqliUpdateBuildStrategy implements UpdateBuildStrategyInterface
 
     private function getUpdateString(string $table) : string
     {
+        $table = $this->quoteName($table);
         return 'UPDATE ' . $table . ' SET';
     }
 
@@ -64,6 +65,9 @@ class MysqliUpdateBuildStrategy implements UpdateBuildStrategyInterface
         /** @var string $field */
         /** @var QueryParamInterface $param */
         foreach ($setState->getValues() as $field => $param) {
+
+            $field = $this->quoteName($field);
+
             $sets[] = $field . ' = ' . MysqliParam::toString($param);
         }
         return implode(', ', $sets);

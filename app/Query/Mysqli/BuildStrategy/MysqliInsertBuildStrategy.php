@@ -11,12 +11,14 @@ use App\Contracts\Query\QueryParamInterface;
 use App\Query\Mysqli\MysqliParam;
 use App\Query\Mysqli\MysqliQuery;
 use App\Query\Mysqli\Traits\BindingParamsTrait;
+use App\Query\Mysqli\Traits\QuotingNamesTrait;
 use App\Query\QueryState\ValuesState;
 use mysqli;
 
 class MysqliInsertBuildStrategy implements InsertBuildStrategyInterface
 {
     use BindingParamsTrait;
+    use QuotingNamesTrait;
 
     public function __construct(private readonly mysqli $mysqli) {}
 
@@ -49,7 +51,11 @@ class MysqliInsertBuildStrategy implements InsertBuildStrategyInterface
 
     private function getInsertString(string $table, array $fields): string
     {
+        $fields = $this->quoteMultiple($fields);
+
         $fieldsString = implode(', ', $fields);
+
+        $table = $this->quoteName($table);
 
         return 'INSERT INTO ' . $table . ' (' . $fieldsString . ') VALUES ';
     }

@@ -7,13 +7,17 @@ use App\Query\QueryState\WhereState;
 
 trait MysqliWhereStringTrait
 {
+    use QuotingNamesTrait;
+
     public function getWhereString(?WhereState $whereState): ?string
     {
         if ( ! $whereState) {
             return null;
         }
 
-        return 'WHERE ' . $whereState->field . ' '
+        $field = $this->quoteName($whereState->field);
+
+        return 'WHERE ' . $field . ' '
                . $whereState->operator->value . ' ' . MysqliParam::toString(
                 $whereState->param,
             );

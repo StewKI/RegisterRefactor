@@ -11,6 +11,7 @@ use App\Contracts\Query\QueryParamInterface;
 use App\Query\Mysqli\MysqliQuery;
 use App\Query\Mysqli\Traits\BindingParamsTrait;
 use App\Query\Mysqli\Traits\MysqliWhereStringTrait;
+use App\Query\Mysqli\Traits\QuotingNamesTrait;
 use App\Query\QueryState\LimitState;
 use App\Query\QueryState\OrderByState;
 use App\Query\QueryState\WhereState;
@@ -65,8 +66,10 @@ class MysqliSelectBuildStrategy implements SelectBuildStrategyInterface
 
     private function getSelectString(string $table, array $fields): string
     {
+        $fields = $this->quoteMultiple($fields);
         $fieldsString = implode(',', $fields);
 
+        $table = $this->quoteName($table);
         return 'SELECT ' . $fieldsString . ' FROM ' . $table;
     }
 
@@ -76,7 +79,9 @@ class MysqliSelectBuildStrategy implements SelectBuildStrategyInterface
             return null;
         }
 
-        return 'ORDER BY ' . $orderByState->field . ' ' . $orderByState->order->value;
+        $field = $this->quoteName($orderByState->field);
+
+        return 'ORDER BY ' . $field . ' ' . $orderByState->order->value;
     }
 
     private function getLimitString(?LimitState $limitState): ?string
