@@ -6,12 +6,13 @@ namespace App\Views;
 
 use App\Contracts\ViewInterface;
 use RuntimeException;
+use Throwable;
 
 class PhpTemplate implements ViewInterface
 {
     private function __construct(
         private readonly string $templateName,
-        private array $data = [],
+        private array $data,
     ) {}
 
     public static function load(
@@ -23,31 +24,48 @@ class PhpTemplate implements ViewInterface
     }
 
 
+    /**
+     * @throws Throwable
+     */
     public function render(): string
     {
-        $path = $this->getPath();
+        $this->injectDataVariables();
 
-        if (!is_file($path)) {
-            throw new RuntimeException("Template not found: {$path}");
-        }
-
-        // Extract variables into local scope for the template
-        extract($this->data, EXTR_SKIP);
-
-        // Capture output buffer
-        ob_start();
-        try {
-            include $path;
-        } catch (\Throwable $e) {
-            ob_end_clean();
-            throw $e;
-        }
-
-        return ob_get_clean();
+        $path = $this->getValidPath();
+        return $this->includeTemplate($path);
     }
 
     private function getPath(): string
     {
         return RESOURCES_DIR . '/templates/' . $this->templateName . '.php';
+    }
+
+    public function getValidPath(): string
+    {
+        $path = $this->getPath();
+
+        if ( ! is_file($path)) {
+            throw new RuntimeException("Template not found: {$path}");
+        }
+
+        return $path;
+    }
+
+    public function injectDataVariables(): void
+    {
+        extract($this->data, EXTR_SKIP);
+    }
+
+    public function includeTemplate(string $path): string|false
+    {
+        ob_start();
+        try {
+            include $path;
+        } catch (Throwable $e) {
+            ob_end_clean();
+            throw $e;
+        }
+
+        return ob_get_clean();
     }
 }
