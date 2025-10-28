@@ -37,11 +37,11 @@
         }
 
         h1{
-            margin:0 0 8px 0;
+            margin:0 0 22px 0;
             font-size:20px;
             font-weight:600;
         }
-        p.lead{
+        p{
             margin:0 0 18px 0;
             color:var(--muted);
             font-size:13px;
@@ -80,12 +80,6 @@
             border-color:var(--accent);
         }
 
-        .help{
-            font-size:12px;
-            color:var(--muted);
-            margin-top:6px;
-        }
-
         .actions{
             display:flex;
             gap:10px;
@@ -106,10 +100,6 @@
         }
 
         button[type="submit"]:active{transform:translateY(1px)}
-        .note{
-            font-size:12px;
-            color:var(--muted);
-        }
 
         @media (max-width:420px){
             body{padding:16px}
@@ -120,7 +110,6 @@
 <body>
 <main class="card" role="main">
     <h1>Create account</h1>
-    <p class="lead">Sign up with your email address.</p>
 
     <form method="post" action="/register" autocomplete="on" novalidate>
         <div class="field">
@@ -131,7 +120,6 @@
         <div class="field">
             <label for="password">Password</label>
             <input id="password" name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters" />
-            <div class="help">Minimum 8 characters.</div>
         </div>
 
         <div class="field">
@@ -141,7 +129,6 @@
 
         <div class="actions">
             <button type="submit">Register</button>
-            <div class="note">We never share your info.</div>
         </div>
     </form>
 </main>
