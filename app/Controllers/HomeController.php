@@ -13,7 +13,7 @@ class HomeController
 {
     public function __construct() {}
 
-    public function index(Request $request): ViewInterface
+    public function index(): ViewInterface
     {
         return Redirect::to("/register");
     }
