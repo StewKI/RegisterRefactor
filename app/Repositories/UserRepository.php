@@ -47,7 +47,7 @@ class UserRepository implements UserRepositoryInterface
         return count($rows) > 0;
     }
 
-    public function getUserById(int $userId): User
+    public function getUserById(int $userId): ?User
     {
         $select = $this->queryBuilderFactory
             ->createSelectQuery("user", ["id", "email", "password"]);
@@ -56,6 +56,10 @@ class UserRepository implements UserRepositoryInterface
 
         $selectQuery = $select->build()->execute();
         $row = $selectQuery->fetchOne();
+
+        if (!is_array($row)) {
+            return null;
+        }
 
         return new User(
             $row["id"],

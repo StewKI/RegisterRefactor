@@ -24,9 +24,13 @@ class AuthService implements AuthServiceInterface
         $this->session->set(self::USER_KEY, $user->getId());
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         $userId = $this->session->get(self::USER_KEY);
+
+        if (! $userId) {
+            return null;
+        }
 
         return $this->userRepository->getUserById($userId);
     }

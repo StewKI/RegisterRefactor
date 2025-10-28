@@ -11,5 +11,5 @@ interface AuthServiceInterface
 {
     public function setUser(User $user): void;
 
-    public function getUser(): User;
+    public function getUser(): ?User;
 }
