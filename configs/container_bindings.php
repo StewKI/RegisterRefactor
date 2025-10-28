@@ -92,7 +92,7 @@ $bindings = [
 
 return function (Container $container): void
 {
-    $container->set(ContainerInterface::class, fn(ContainerInterface $container) => $container);
+    $container->set(ContainerInterface::class, fn() => $container);
 
     global $singletons;
     $container->singletonMultiple($singletons);
