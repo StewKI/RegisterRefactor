@@ -20,17 +20,6 @@ class Mail
         private MailStatus $status,
     ) {}
 
-    public function getMailData(): MailData
-    {
-        return new MailData(
-            $this->to,
-            $this->subject,
-            $this->body,
-            $this->from,
-            $this->fromName,
-        );
-    }
-
     public function getId(): int
     {
         return $this->id;

@@ -8,6 +8,7 @@ namespace App\Services\Mail;
 use App\Contracts\Repositories\MailRepositoryInterface;
 use App\Contracts\Services\Mail\MailSenderServiceInterface;
 use App\Contracts\Services\Mail\SendQueuedMailsServiceInterface;
+use App\DTOs\MailData;
 use App\Enums\MailStatus;
 use App\Models\Mail;
 
@@ -31,7 +32,7 @@ class SendQueuedMailsService implements SendQueuedMailsServiceInterface
     {
         try
         {
-            $this->mailSenderService->send($mail->getMailData());
+            $this->mailSenderService->send(MailData::fromModel($mail));
 
             $this->mailRepository->updateMailStatus($mail, MailStatus::SENT);
         }

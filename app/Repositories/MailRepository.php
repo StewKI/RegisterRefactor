@@ -32,20 +32,13 @@ class MailRepository implements MailRepositoryInterface
             $mailData->fromName,
             $mailData->subject,
             $mailData->message,
-            $mailStatus->value
+            $mailStatus->value,
         ]));
 
         $query = $insert->build()->execute();
 
-        return new Mail(
-            $query->lastInsertId(),
-            $mailData->to,
-            $mailData->from,
-            $mailData->fromName,
-            $mailData->subject,
-            $mailData->message,
-            MailStatus::QUEUED
-        );
+        $id = $query->lastInsertId();
+        return $mailData->toModel($id, $mailStatus);
     }
 
     /**
@@ -61,17 +54,7 @@ class MailRepository implements MailRepositoryInterface
         $query = $select->build()->execute();
         $mails = $query->fetchAll();
 
-        $mails = array_map(function ($mail) {
-            return new Mail(
-                $mail["id"],
-                $mail["to"],
-                $mail["from"],
-                $mail["from_name"],
-                $mail["subject"],
-                $mail["body"],
-                MailStatus::from($mail["status"])
-            );
-        }, $mails);
+        $mails = array_map(fn ($mail) => $this->mapRow($mail), $mails);
 
         return $mails;
     }
@@ -88,5 +71,18 @@ class MailRepository implements MailRepositoryInterface
         $query = $update->build()->execute();
 
         return $mail->setStatus($newStatus);
+    }
+
+    private function mapRow(array $mail): Mail
+    {
+        return new Mail(
+            $mail["id"],
+            $mail["to"],
+            $mail["from"],
+            $mail["from_name"],
+            $mail["subject"],
+            $mail["body"],
+            MailStatus::from($mail["status"]),
+        );
     }
 }
