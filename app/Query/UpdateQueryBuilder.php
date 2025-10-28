@@ -13,7 +13,6 @@ use App\Enums\Query\Operator;
 use App\Exceptions\Query\QueryBuildingException;
 use App\Query\QueryState\SetState;
 use App\Query\QueryState\WhereState;
-use Cassandra\Set;
 
 class UpdateQueryBuilder implements UpdateQueryBuilderInterface
 {
