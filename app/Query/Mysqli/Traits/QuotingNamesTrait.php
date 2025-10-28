@@ -11,6 +11,16 @@ trait QuotingNamesTrait
 
     private function quoteName(string $name): string
     {
+        if ($this->quoteWhiteList($name)) {
+            return $name;
+        }
+
         return '`' . $name . '`';
+    }
+
+    private function quoteWhiteList(string $name): bool
+    {
+        $whiteList = ["*"];
+        return in_array($name, $whiteList);
     }
 }
