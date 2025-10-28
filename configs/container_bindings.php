@@ -7,6 +7,7 @@ use App\Config;
 use App\Container;
 use App\Contracts\AuthServiceInterface;
 use App\Contracts\DataLoaderInterface;
+use App\Contracts\Notifiers\UserRegisteredNotifierInterface;
 use App\Contracts\Providers\IpProviderInterface;
 use App\Contracts\Providers\MailAddressProviderInterface;
 use App\Contracts\Providers\MailContentProviderInterface;
@@ -25,6 +26,7 @@ use App\Contracts\Services\UserCreatorServiceInterface;
 use App\Contracts\SessionInterface;
 use App\Contracts\Validation\Validators\UserRegistrationValidatorInterface;
 use App\DB;
+use App\Notifiers\UserRegisteredNotifier;
 use App\Providers\IpProvider;
 use App\Providers\MailAddressProvider;
 use App\Providers\MailContentProvider;
@@ -85,6 +87,7 @@ $bindings = [
     IpProviderInterface::class => IpProvider::class,
     HashingServiceInterface::class => NativeHashingService::class,
     UserCreatorServiceInterface::class => UserCreatorService::class,
+    UserRegisteredNotifierInterface::class => UserRegisteredNotifier::class,
 ];
 
 return function (Container $container): void

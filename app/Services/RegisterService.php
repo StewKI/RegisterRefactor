@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\AuthServiceInterface;
+use App\Contracts\Notifiers\UserRegisteredNotifierInterface;
 use App\Contracts\Repositories\UserLogRepositoryInterface;
 use App\Contracts\Services\Mail\MailTemplateServiceInterface;
 use App\Contracts\Services\Mail\QueueMailServiceInterface;
@@ -19,9 +20,7 @@ class RegisterService implements RegisterServiceInterface
     public function __construct(
         private readonly UserRegistrationValidatorInterface $validator,
         private readonly UserCreatorServiceInterface $userCreator,
-        private readonly MailTemplateServiceInterface $mailTemplateService,
-        private readonly QueueMailServiceInterface $queueMailService,
-        private readonly UserLogRepositoryInterface $logRepository,
+        private readonly UserRegisteredNotifierInterface $notifier,
         private readonly AuthServiceInterface $authProvider,
     ) {}
 
@@ -31,31 +30,10 @@ class RegisterService implements RegisterServiceInterface
 
         $user = $this->userCreator->createUser($data);
 
-        $this->onSuccess($user);
+        $this->notifier->notify($user);
+
+        $this->authProvider->setUser($user);
 
         return $user;
     }
-
-
-    private function onSuccess(User $user): void
-    {
-        $this->queueWelcomeMail($user);
-        $this->logRegistered($user);
-
-        $this->authProvider->setUser($user);
-    }
-
-
-    public function logRegistered(User $user): void
-    {
-        $this->logRepository->createUserLog("register", $user->getId());
-    }
-
-    public function queueWelcomeMail(User $user): void
-    {
-        $this->queueMailService->queueMail(
-            $this->mailTemplateService->getWelcomeMail($user),
-        );
-    }
-
 }
