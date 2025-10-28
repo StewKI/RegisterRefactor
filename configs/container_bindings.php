@@ -24,6 +24,7 @@ use App\Contracts\Services\RegisterServiceInterface;
 use App\Contracts\Services\UserCreatorServiceInterface;
 use App\Contracts\SessionInterface;
 use App\Contracts\Validation\Validators\UserRegistrationValidatorInterface;
+use App\DB;
 use App\Providers\IpProvider;
 use App\Providers\MailAddressProvider;
 use App\Providers\MailContentProvider;
@@ -45,8 +46,19 @@ use App\Utils\JsonDataLoader;
 use App\Validation\Validators\UserRegistrationValidator;
 use Psr\Container\ContainerInterface;
 
+$singletons = [
+    DB::class => function (ContainerInterface $container) {
+        $config = $container->get(Config::class);
+
+        return new DB($config->db);
+    },
+];
+
 $bindings = [
-    mysqli::class                          => fn () => App::getDb()->getMysqli(),
+    mysqli::class                          => function (ContainerInterface $container) {
+        $db = $container->get(DB::class);
+        return $db->getMysqli();
+    },
     QueryBuilderFactoryInterface::class    => function (ContainerInterface $container) {
         return $container->get(MysqliQueryBuilderFactory::class);
     },
@@ -77,7 +89,11 @@ $bindings = [
 
 return function (Container $container): void
 {
-    global $bindings;
     $container->set(ContainerInterface::class, fn(ContainerInterface $container) => $container);
+
+    global $singletons;
+    $container->singletonMultiple($singletons);
+
+    global $bindings;
     $container->setMultiple($bindings);
 };

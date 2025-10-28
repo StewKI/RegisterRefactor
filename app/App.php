@@ -10,25 +10,11 @@ use App\Views\View;
 
 class App
 {
-    private static DB $db;
-
     public function __construct(
-        private readonly Config $config,
         private readonly Router $router,
         private readonly array $request = [],
     ) {}
 
-
-    public function boot(): static
-    {
-        static::$db = new DB($this->config->db);
-        return $this;
-    }
-
-    public static function getDb(): DB
-    {
-        return static::$db;
-    }
 
     public function run(): void
     {
