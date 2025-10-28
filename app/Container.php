@@ -18,6 +18,11 @@ class Container implements ContainerInterface
      * @var (callable|string)[]
      */
     private array $entries = [];
+    /**
+     * @var (callable|string)[]
+     */
+    private array $singletons = [];
+    private array $instances = [];
 
     /**
      * @throws ReflectionException
@@ -26,6 +31,17 @@ class Container implements ContainerInterface
      */
     public function get(string $id)
     {
+        if (isset($this->instances[$id])) {
+            return $this->instances[$id];
+        }
+
+        if (isset($this->singletons[$id])) {
+            $entry = $this->singletons[$id];
+            $object = is_callable($entry) ? $entry($this) : $this->resolve($entry);
+            $this->instances[$id] = $object;
+            return $object;
+        }
+
         if ($this->has($id))
         {
             $entry = $this->entries[$id];
@@ -49,6 +65,11 @@ class Container implements ContainerInterface
         $this->entries[$id] = $concrete;
     }
 
+    public function singleton(string $id, callable|string $concrete): void
+    {
+        $this->singletons[$id] = $concrete;
+    }
+
     /**
      * @param (callable|string)[] $entries
      */
@@ -58,6 +79,18 @@ class Container implements ContainerInterface
             $this->set($id, $concrete);
         }
     }
+
+    /**
+     * @param (callable|string)[] $entries
+     */
+    public function singletonMultiple(array $entries): void
+    {
+        foreach ($entries as $id => $concrete) {
+            $this->singleton($id, $concrete);
+        }
+    }
+
+
 
     /**
      * @throws ContainerException
